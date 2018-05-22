@@ -5,6 +5,7 @@ import (
     "log"
 	"net/http"
 	"strconv"
+	"encoding/json"
 )
 
 func main() {
@@ -27,9 +28,13 @@ func main() {
 				sum=sum+integer
 				numberString=""
 			}
-			sumString:=strconv.Itoa(sum)
-			fmt.Fprintf(w, sumString)
-
+			
+			var resultMap map[string]int
+			resultMap = make(map[string]int)
+			resultMap["result"]=sum
+			resultJson,_ := json.Marshal(resultMap)
+			ans:=string(resultJson)
+			fmt.Fprintf(w,ans)
 			header:=r.Header["User-Agent"]
 			fmt.Println(header)
 		}
