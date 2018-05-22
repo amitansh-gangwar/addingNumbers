@@ -13,24 +13,25 @@ func main() {
 		if r.Method=="POST"{
 			requestMessage:=r.URL.Path[5:]
 			index:=0
-			firstNumber:=""
-			secondNumber:=""
-			for ;requestMessage[index]<='9' && requestMessage[index]>='0';{
-				firstNumber=firstNumber+string(requestMessage[index])
+			numberString:=""
+			var s []int
+			sum:=0
+			for ;index<len(requestMessage);{
+				for ;index<len(requestMessage) && requestMessage[index]<='9' && requestMessage[index]>='0';{
+					numberString=numberString+string(requestMessage[index])
+					index++
+				}
 				index++
+				integer,_:=strconv.Atoi(numberString)
+				s=append(s,integer)
+				sum=sum+integer
+				numberString=""
 			}
-			index++
-			for ;index<len(requestMessage) && requestMessage[index]<='9' && requestMessage[index]>='0';{
-				secondNumber=secondNumber+string(requestMessage[index])
-				index++
-			}
-			
-			firstInteger,_:=strconv.Atoi(firstNumber)
-			
-			secondInteger,_:=strconv.Atoi(secondNumber)
-			sum:=firstInteger+secondInteger
 			sumString:=strconv.Itoa(sum)
 			fmt.Fprintf(w, sumString)
+
+			header:=r.Header["User-Agent"]
+			fmt.Println(header)
 		}
     })
 
