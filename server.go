@@ -6,37 +6,42 @@ import (
 	"net/http"
 	"strconv"
 	"encoding/json"
+	"strings"
 )
 
-func main() {
+func main1() {
     
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
-		if r.Method=="POST"{
-			requestMessage:=r.URL.Path[5:]
-			index:=0
-			numberString:=""
-			var s []int
-			sum:=0
-			for ;index<len(requestMessage);{
-				for ;index<len(requestMessage) && requestMessage[index]<='9' && requestMessage[index]>='0';{
-					numberString=numberString+string(requestMessage[index])
-					index++
-				}
-				index++
-				integer,_:=strconv.Atoi(numberString)
-				s=append(s,integer)
-				sum=sum+integer
-				numberString=""
-			}
+		if r.Method == "POST"{
+			errortype:=""
+			requestMessage := r.URL.Path[5:]
 			
-			var resultMap map[string]int
-			resultMap = make(map[string]int)
-			resultMap["result"]=sum
-			resultJson,_ := json.Marshal(resultMap)
-			ans:=string(resultJson)
-			fmt.Fprintf(w,ans)
-			header:=r.Header["User-Agent"]
-			fmt.Println(header)
+			var numbers []string
+			numbers = strings.Split(requestMessage,"/")
+			
+			sum := 0
+			for _,number := range numbers{
+				integer,error := strconv.Atoi(number)
+				if error!=nil {
+					errortype="type error"
+					break
+				}
+				sum = sum + integer
+			}
+
+			if len(requestMessage)==0 {
+				fmt.Fprintf(w,"No integers given as input")
+			}else if errortype=="type error" {
+				fmt.Fprintf(w,"Entered numbers must be of type int")	
+			}else{
+				var resultMap map[string]int
+				resultMap = make(map[string]int)
+				resultMap["result"] = sum
+				//resultMap["success"]="ok"
+				resultJson,_ := json.Marshal(resultMap)
+				ans := string(resultJson)
+				fmt.Fprintf(w,ans)
+			}
 		}
     })
 

@@ -5,6 +5,7 @@ import (
     "fmt"
 	"strconv"
 	"encoding/json"
+	"errors"
 )
 
 func main() {
@@ -12,9 +13,18 @@ func main() {
 	sum:=0
 
 	numbers:=os.Args[1:]
+	if(len(numbers)==0){
+		fmt.Println(errors.New("No integers given as input"))
+		os.Exit(0)
+	}
 	for _,number := range numbers{
-		integer,_:= strconv.Atoi(number)
-		sum=sum+integer
+		integer,error:= strconv.Atoi(number)
+		if error==nil{
+			sum=sum+integer
+		}else{
+			fmt.Println(errors.New("Entered numbers must be of type int"))
+			os.Exit(0)
+		}
 	}
 
 	var resultMap map[string]int
