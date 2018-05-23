@@ -9,7 +9,12 @@ import (
 	"strings"
 )
 
-func main1() {
+type solution struct{
+	Addition int
+	Success string
+}
+
+func main() {
     
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
 		if r.Method == "POST"{
@@ -34,11 +39,8 @@ func main1() {
 			}else if errortype=="type error" {
 				fmt.Fprintf(w,"Entered numbers must be of type int")	
 			}else{
-				var resultMap map[string]int
-				resultMap = make(map[string]int)
-				resultMap["result"] = sum
-				//resultMap["success"]="ok"
-				resultJson,_ := json.Marshal(resultMap)
+				answer := solution{sum,"ok"}
+				resultJson,_ := json.Marshal(answer)
 				ans := string(resultJson)
 				fmt.Fprintf(w,ans)
 			}

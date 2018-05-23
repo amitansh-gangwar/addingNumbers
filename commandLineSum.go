@@ -8,6 +8,11 @@ import (
 	"errors"
 )
 
+type result struct{
+	Addition int
+	Success string
+}
+
 func main() {
     
 	sum:=0
@@ -27,10 +32,8 @@ func main() {
 		}
 	}
 
-	var resultMap map[string]int
-	resultMap = make(map[string]int)
-	resultMap["result"]=sum
-	resultJson,_ := json.Marshal(resultMap)
+	answer := result{sum,"ok"}
+	resultJson,_ := json.Marshal(answer)
 	ans:=string(resultJson)
 	fmt.Println(ans)
 
